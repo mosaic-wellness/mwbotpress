@@ -91,7 +91,9 @@ const TYPES = {
   MessageStats: Symbol.for('MessageStats'),
   RenderService: Symbol.for('RenderService'),
   QnaService: Symbol.for('QnaService'),
-  MessagingService: Symbol.for('MessagingService')
+  MessagingService: Symbol.for('MessagingService'),
+  S3BackupService: Symbol.for('S3BackupService'),
+  BackupScheduler: Symbol.for('BackupScheduler')
 }
 
 export { TYPES }

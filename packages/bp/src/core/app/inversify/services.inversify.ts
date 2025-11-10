@@ -22,6 +22,7 @@ import { ContainerModule, interfaces } from 'inversify'
 import CELicensingService from '../../services/licensing'
 import { NLUService } from '../../services/nlu/nlu-service'
 import { TYPES } from '../types'
+import { BackupContainerModule } from 'core/backup'
 
 const ServicesContainerModule = new ContainerModule((bind: interfaces.Bind) => {
   bind<CMSService>(TYPES.CMSService)
@@ -138,4 +139,9 @@ const ServicesContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     .inSingletonScope()
 })
 
-export const ServicesContainerModules = [ServicesContainerModule, DialogContainerModule, GhostContainerModule]
+export const ServicesContainerModules = [
+  ServicesContainerModule,
+  DialogContainerModule,
+  GhostContainerModule,
+  BackupContainerModule
+]

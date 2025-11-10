@@ -1,0 +1,30 @@
+{
+  "// Add this to your botpress.config.json": "",
+  "s3Backup": {
+    "enabled": true,
+    "bucket": "mwbot",
+    "region": "ap-south-1",
+    "accessKeyId": "YOUR_AWS_ACCESS_KEY_ID",
+    "secretAccessKey": "YOUR_AWS_SECRET_ACCESS_KEY",
+    "prefix": "production",
+    "autoBackupOnChanges": true,
+    "backupDebounceTime": 30000,
+    "scheduledBackupInterval": "24h"
+  },
+  
+  "// Alternative: Use environment variables instead of hardcoding credentials": "",
+  "s3Backup_alt": {
+    "enabled": true,
+    "bucket": "mwbot",
+    "region": "ap-south-1",
+    "autoBackupOnChanges": true,
+    "backupDebounceTime": 30000,
+    "scheduledBackupInterval": "24h"
+  },
+  
+  "// Then set these environment variables:": "",
+  "// export AWS_REGION=us-east-1": "",
+  "// export AWS_ACCESS_KEY_ID=your_access_key": "",
+  "// export AWS_SECRET_ACCESS_KEY=your_secret_key": ""
+}
+

@@ -38,6 +38,7 @@ import {
 import { TelemetryRouter, TelemetryRepository } from 'core/telemetry'
 import { ActionService, ActionServersService, HintsService } from 'core/user-code'
 import { WorkspaceService } from 'core/users'
+import { BackupRouter, S3BackupService } from 'core/backup'
 import cors from 'cors'
 import errorHandler from 'errorhandler'
 import { UnlicensedError } from 'errors'
@@ -84,6 +85,7 @@ export class HTTPServer {
   private readonly sdkApiRouter!: SdkApiRouter
   private internalRouter: InternalRouter
   private messagingRouter: MessagingRouter
+  private backupRouter: BackupRouter
   private _needPermissions: (
     operation: string,
     resource: string
@@ -128,7 +130,8 @@ export class HTTPServer {
     @inject(TYPES.QnaService) private qnaService: QnaService,
     @inject(TYPES.MessagingService) private messagingService: MessagingService,
     @inject(TYPES.ObjectCache) private objectCache: MemoryObjectCache,
-    @inject(TYPES.EventRepository) private eventRepo: EventRepository
+    @inject(TYPES.EventRepository) private eventRepo: EventRepository,
+    @inject(TYPES.S3BackupService) private s3BackupService: S3BackupService
   ) {
     this.app = express()
 
@@ -208,6 +211,7 @@ export class HTTPServer {
     )
 
     this.messagingRouter = new MessagingRouter(this.logger, messagingService, this)
+    this.backupRouter = new BackupRouter(this.logger, this.authService, this.s3BackupService)
 
     this._needPermissions = needPermissions(this.workspaceService)
     this._hasPermissions = hasPermissions(this.workspaceService)
@@ -382,6 +386,7 @@ export class HTTPServer {
     await this.botsRouter.setupRoutes(this.app)
     this.internalRouter.setupRoutes()
     this.messagingRouter.setupRoutes()
+    this.backupRouter.setupRoutes()
 
     this.app.use('/assets', this.guardWhiteLabel(), express.static(resolveAsset('')))
 
@@ -392,6 +397,7 @@ export class HTTPServer {
     this.app.use(`${BASE_API_PATH}/sdk`, this.sdkApiRouter.router)
     this.app.use(`${BASE_API_PATH}/telemetry`, this.telemetryRouter.router)
     this.app.use(`${BASE_API_PATH}/media`, this.mediaRouter.router)
+    this.app.use(`${BASE_API_PATH}/admin/backup`, this.backupRouter.router)
     this.app.use('/s', this.shortLinksRouter.router)
 
     this.app.use((err, _req, _res, next) => {
