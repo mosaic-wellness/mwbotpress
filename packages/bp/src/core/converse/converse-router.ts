@@ -22,7 +22,10 @@ const conversePayloadSchema = {
   metadata: joi
     .object()
     .optional()
-    .default({})
+    .default({}),
+  userContext: joi
+    .any()
+    .optional()
 }
 
 export class ConverseRouter extends CustomRouter {
@@ -63,9 +66,10 @@ export class ConverseRouter extends CustomRouter {
         const rawOutput = await this.converseService.sendMessage(
           botId,
           userId,
-          _.omit(req.body, ['includedContexts']),
+          _.omit(req.body, ['includedContexts', 'userContext']),
           req.credentials,
-          req.body.includedContexts || ['global']
+          req.body.includedContexts || ['global'],
+          req.body.userContext
         )
         const formatedOutput = this.prepareResponse(rawOutput, params)
 
@@ -88,9 +92,10 @@ export class ConverseRouter extends CustomRouter {
         const rawOutput = await this.converseService.sendMessage(
           botId,
           userId,
-          _.omit(req.body, ['includedContexts']),
+          _.omit(req.body, ['includedContexts', 'userContext']),
           req.credentials,
-          req.body.includedContexts || ['global']
+          req.body.includedContexts || ['global'],
+          req.body.userContext
         )
         const formatedOutput = this.prepareResponse(rawOutput, req.query.include)
 

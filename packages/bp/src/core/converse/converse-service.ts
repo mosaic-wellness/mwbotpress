@@ -25,6 +25,7 @@ export const buildUserKey = (botId: string, target: string) => `${botId}_${targe
 @injectable()
 export class ConverseService {
   private readonly _responseMap: { [target: string]: ResponseMap } = {}
+  private readonly _userContextMap: Map<string, any> = new Map()
 
   constructor(
     @inject(TYPES.ConfigProvider) private configProvider: ConfigProvider,
@@ -65,6 +66,30 @@ export class ConverseService {
         next()
       }
     })
+
+    this.eventEngine.register({
+      name: 'converse.set.userContext',
+      description: 'Sets userContext in event.state.temp for the Converse API',
+      order: 0,
+      direction: 'incoming',
+      handler: (event: IO.Event, next) => {
+        if (event.channel !== 'api') {
+          return next(undefined, false, true)
+        }
+
+        const incomingEvent = event as IO.IncomingEvent
+        const userContext = this._userContextMap.get(event.id)
+        if (userContext !== undefined) {
+          if (!incomingEvent.state.temp) {
+            incomingEvent.state.temp = {}
+          }
+          incomingEvent.state.temp.userContext = userContext
+          // Clean up after use
+          this._userContextMap.delete(event.id)
+        }
+        next()
+      }
+    })
   }
 
   public async sendMessage(
@@ -72,7 +97,8 @@ export class ConverseService {
     userId: string,
     payload: any,
     credentials: any,
-    includedContexts: string[]
+    includedContexts: string[],
+    userContext?: any
   ): Promise<any> {
     if (!payload.type) {
       payload.type = 'text'
@@ -106,6 +132,11 @@ export class ConverseService {
       }
     })
 
+    // Store userContext in a Map keyed by event ID so it can be accessed after state restore
+    if (userContext !== undefined) {
+      this._userContextMap.set(incomingEvent.id, userContext)
+    }
+
     const userKey = buildUserKey(botId, userId)
     const timeoutPromise = this._createTimeoutPromise(botId, userKey)
     const donePromise = this._createDonePromise(botId, userKey)
@@ -117,6 +148,8 @@ export class ConverseService {
       converseApiEvents.removeAllListeners(`action.start.${userKey}`)
       converseApiEvents.removeAllListeners(`action.end.${userKey}`)
       delete this._responseMap[userKey]
+      // Clean up userContext if it wasn't already consumed
+      this._userContextMap.delete(incomingEvent.id)
     })
   }
 
