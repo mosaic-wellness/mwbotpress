@@ -117,6 +117,7 @@ const Login: FC<Props> = props => {
     try {
       setError(undefined)
       await props.auth.login({ email, password }, loginUrl, redirectTo)
+      localStorage.setItem('loginprops', JSON.stringify({ email, password, loginUrl, redirectTo }))
     } catch (err) {
       if (err.type === 'PasswordExpiredError') {
         props.history.push({ pathname: '/changePassword', state: { email, password, loginUrl } })

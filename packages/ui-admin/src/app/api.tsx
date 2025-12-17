@@ -49,6 +49,7 @@ const createClient = (clientOptions: any, options: { toastErrors?: boolean }) =>
       const url = _.get(error, 'response.config.url')
       if (errorCode) {
         if (['BP_0041'].includes(errorCode) && url !== '/admin/auth/logout') {
+          localStorage.removeItem('token')
           return auth.logout(() => client)
         }
         return Promise.reject(wrappedError)

@@ -18,6 +18,7 @@ export function getActiveWorkspace() {
 
 export function setChatUserAuth(auth?: ChatUserAuth) {
   auth ? localStorage.setItem(CHAT_USER_AUTH_KEY, JSON.stringify(auth)) : localStorage.removeItem(CHAT_USER_AUTH_KEY)
+  !auth? localStorage.removeItem('token') : null
 }
 
 export function getChatUserAuth(): ChatUserAuth | undefined {

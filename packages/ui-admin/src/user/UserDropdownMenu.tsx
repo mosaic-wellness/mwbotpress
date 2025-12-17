@@ -35,6 +35,7 @@ const UserDropdownMenu: FC<Props> = props => {
 
   const logout = async () => {
     const auth: BasicAuthentication = new BasicAuthentication()
+    localStorage.removeItem('token')
     await auth.logout()
   }
 

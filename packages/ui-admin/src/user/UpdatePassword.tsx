@@ -46,6 +46,7 @@ const UpdatePassword: FC<Props> = props => {
       if (errorCode === 'BP_0011') {
         // Let the user see the toast before logging him out
         setTimeout(() => {
+          localStorage.removeItem('token')
           auth.logout(() => client)
         }, 1000)
       }

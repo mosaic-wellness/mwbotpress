@@ -69,6 +69,7 @@ export const fetchProfile = (): AppThunk => {
       const { data } = await api.getSecured().get('/admin/user/profile')
       dispatch({ type: MY_PROFILE_RECEIVED, profile: data.payload })
     } catch (err) {
+      localStorage.removeItem('token')
       auth.logout(() => api.getSecured())
     }
   }

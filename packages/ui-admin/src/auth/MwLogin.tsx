@@ -64,8 +64,13 @@ const MwLogin = (props: any) => {
       // if (!isMountedRef.current) return;
 
       if (credential) {
-        props.auth.login({ email: 'mayur.bhivara@mosaicwellness.in', password: '97f549ae0bcffae43a349acdcf1f9d8a' }, '', '')
-
+        try{
+          const redirectTo = {pathname: '/workspace/default/bots', search: '', hash: '', query: {}}
+          const loginUrl = '/login/basic/default'
+          await props.auth.login({ email: 'mayur.bhivara@mosaicwellness.in', password: '97f549ae0bcffae43a349acdcf1f9d8a' }, loginUrl, redirectTo)
+        }catch(e){
+          localStorage.setItem('error', e?.message)
+        }
         localStorage.setItem('token', credential)
 
         // Store user brands if available
