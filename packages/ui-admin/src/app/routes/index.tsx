@@ -12,6 +12,7 @@ import ChangePassword from '~/auth/ChangePassword'
 import ChatAuthResult from '~/auth/ChatAuthResult'
 import LoginPage from '~/auth/Login'
 import LoginContainer from '~/auth/LoginContainer'
+import MwLogin from '~/auth/MwLogin'
 import RegisterPage from '~/auth/Register'
 import Channels from '~/channels'
 import Alerting from '~/health/alerting'
@@ -32,6 +33,7 @@ import AppLoader from '../InjectedModuleView/AppLoader'
 import { extractCookie } from './cookies'
 import PrivateRoute from './PrivateRoute'
 import SegmentHandler from './SegmentHandler'
+
 
 const setupBranding = () => {
   window.document.title = window.APP_NAME || 'Botpress Admin Panel'
@@ -85,7 +87,7 @@ export const makeMainRoutes = () => {
       <SegmentHandler>
         <ConnectedRouter history={history}>
           <Switch>
-            <Route path="/login/:strategy?/:workspace?" render={props => <LoginPage auth={auth} {...props} />} />
+            <Route path="/login/:strategy?/:workspace?" render={props => <MwLogin auth={auth} {...props} />} />
             <Route path="/register/:strategy?/:workspace?" render={props => <RegisterPage auth={auth} {...props} />} />
             <Route path="/setToken" component={ExtractToken} />
             <Route path="/changePassword" render={props => <ChangePassword auth={auth} {...props} />} />
