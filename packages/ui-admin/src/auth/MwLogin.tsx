@@ -67,7 +67,7 @@ const MwLogin = (props: any) => {
         try{
           const redirectTo = {pathname: '/workspace/default/bots', search: '', hash: '', query: {}}
           const loginUrl = '/login/basic/default'
-          await props.auth.login({ email: 'mayur.bhivara@mosaicwellness.in', password: '97f549ae0bcffae43a349acdcf1f9d8a' }, loginUrl, redirectTo)
+          await props.auth.login({ email: 'mayurbhirava', password: '953ay6mFWF7NtyX2' }, loginUrl, redirectTo)
         }catch(e){
           localStorage.setItem('error', e?.message)
         }
