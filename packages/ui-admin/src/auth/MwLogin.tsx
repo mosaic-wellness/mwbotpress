@@ -96,11 +96,7 @@ const MwLogin = (props: any) => {
 
     // Check if user is already logged in
     const checkExistingAuth = () => {
-      const token = localStorage.getItem('token')
-
-      if (token) {
-        return true
-      }
+      localStorage.removeItem('token')
       return false
     }
 
